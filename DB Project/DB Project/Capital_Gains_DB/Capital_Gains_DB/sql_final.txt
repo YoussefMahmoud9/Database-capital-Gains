@@ -1,0 +1,168 @@
+CREATE DATABASE Bank;
+
+CREATE TABLE branch 
+   (
+    bid int,
+    baddress VARCHAR(30),
+    CONSTRAINT bid_pk PRIMARY KEY(bid) 
+   );
+
+CREATE TABLE account
+   (
+      acnumber VARCHAR(16),
+      custssn  VARCHAR(14),
+      type VARCHAR(10),
+      balance DECIMAL(13,2),
+      username VARCHAR(30),
+      password VARCHAR(50),
+      bid int,
+      email VARCHAR(50),
+      CONSTRAINT account_acnumber_pk PRIMARY KEY(acnumber),
+      CONSTRAINT account_bid_fk FOREIGN KEY(bid) REFERENCES branch(bid), 
+      CONSTRAINT account_custssn_fk FOREIGN KEY(custssn) REFERENCES customer(custssn) 
+    );
+
+-------------------------
+CREATE TABLE customer 
+   (
+       custssn VARCHAR(14),
+       fname VARCHAR(30),
+       lname VARCHAR(30),
+       address varchar(30),
+       dob DATE,
+      CONSTRAINT customer_custssn_pk PRIMARY KEY(custssn)   
+   );
+
+CREATE TABLE customer_phone_numbers 
+   (
+    custssn VARCHAR(14),   
+    number INT(11),
+    CONSTRAINT phone_custssn_fk FOREIGN KEY(custssn) REFERENCES customer(custssn) 
+   );
+
+CREATE TABLE loan 
+   (
+    custssn VARCHAR(14),
+    bid INT,
+    loan_amount DECIMAL(13,2),
+    loan_type VARCHAR(30),
+    startdate date,
+    enddate date,
+    interest VARCHAR(10),
+    CONSTRAINT loan_customer_custssn_bid_pk PRIMARY KEY(custssn,bid),
+    CONSTRAINT loan_custssn_fk FOREIGN KEY(custssn) REFERENCES customer(custssn),
+    CONSTRAINT loan_bid_fk FOREIGN KEY(bid) REFERENCES branch(bid)
+   );
+
+CREATE TABLE employee 
+   (
+       empssn VARCHAR(14),
+       fname VARCHAR(30),
+       ltname VARCHAR(30),
+       address varchar(30),
+       dob DATE,
+       salary FLOAT(7,2),
+       speciality VARCHAR(20),
+       supervisorssn VARCHAR(14),
+       bid int,
+      CONSTRAINT employee_ssn_pk PRIMARY KEY(empssn),
+      CONSTRAINT emp_bid_fk FOREIGN KEY(bid) REFERENCES branch(bid),
+      CONSTRAINT supervisor_selfkey FOREIGN KEY (supervisorssn) REFERENCES employee(empssn) ON DELETE RESTRICT ON UPDATE RESTRICT
+   );
+
+
+
+
+
+
+----------------------------
+
+
+
+INSERT INTO branch(bid, baddress) VALUES (1,'Alexandria');
+INSERT INTO branch(bid, baddress) VALUES (2,'Cairo');
+
+
+
+INSERT INTO employee(empssn, fname, ltname, address, dob, salary, speciality, supervisorssn, bid) VALUES ('12345678123456','Youssef','Mahmoud','Loran','2000-10-28','50000.00','Manager', NULL, 1);
+
+INSERT INTO employee(empssn, fname, ltname, address, dob, salary, speciality, supervisorssn, bid) VALUES ('87654321876543','Yahia','Khaled','Mahrousa','2001-6-27','50000.00','Manager', NULL, 2);
+
+INSERT INTO employee(empssn, fname, ltname, address, dob, salary, speciality, supervisorssn, bid) VALUES ('12341234123412','Bahaa','Ayman','Gleem','1998-5-4','2000.00','IT','87654321876543', 2);
+
+INSERT INTO employee(empssn, fname, ltname, address, dob, salary, speciality, supervisorssn, bid) VALUES ('56785678567856','Mohamed','Saied','Smouha','1995-8-6','5000.00','Sales','87654321876543', 2);
+
+INSERT INTO employee(empssn, fname, ltname, address, dob, salary, speciality, supervisorssn, bid) VALUES ('12121212121212','Hoda','Mahmoud','Roushdy','1995-10-8','3000.00','IT','12345678123456', 1);
+
+INSERT INTO employee(empssn, fname, ltname, address, dob, salary, speciality, supervisorssn, bid) VALUES ('45454545454545','Youssef','Ahmed','Smouha','1995-10-8','3000.00','Sales','12345678123456', 1);
+
+
+
+
+
+INSERT INTO customer(custssn, fname, lname, address, dob) VALUES ('17042655458275','Ahmed','Adel','Loran','2000-5-5');
+
+INSERT INTO customer(custssn, fname, lname, address, dob) VALUES ('64378304680857','Saif','Swelam','Smouha','2001-6-6');
+
+INSERT INTO customer(custssn, fname, lname, address, dob) VALUES ('11550457037061','Khaled','Adel','Mohandseen','2002-8-7');
+
+INSERT INTO customer(custssn, fname, lname, address, dob) VALUES ('85625712383524','Farouk','Omar','Giza','1988-8-7');
+
+INSERT INTO customer(custssn, fname, lname, address, dob) VALUES ('92888380703487','Ahmed','Refaat','Smouha','1788-5-7');
+
+INSERT INTO customer(custssn, fname, lname, address, dob) VALUES ('00406737365240','Khaled','Mohamed','Gleem','2012-7-6');
+
+INSERT INTO customer(custssn, fname, lname, address, dob) VALUES ('01531585348602','Mohamed','Sayed','Giza','1999-8-9');
+
+INSERT INTO customer(custssn, fname, lname, address, dob) VALUES ('12345678123456','Youssef','Mahmoud','Loran','2000-10-28');
+
+
+
+
+
+
+
+
+INSERT INTO account(acnumber, custssn, type, balance, username, password, bid, email) VALUES
+('0166726334417192','17042655458275','Saving','100000','ahmed55','91325382','1','ahmed55@gmail.com');
+
+INSERT INTO account(acnumber, custssn, type, balance, username, password, bid, email) VALUES
+('4247243956087836','64378304680857','Checking','500000','saif12','77043637','1','saif12@gmail.com');
+
+INSERT INTO account(acnumber, custssn, type, balance, username, password, bid, email) VALUES
+('9678912319346307','11550457037061','Saving','9000000','khalouda','86903705','1','khalouda@gmail.com');
+
+INSERT INTO account(acnumber, custssn, type, balance, username, password, bid, email) VALUES
+('8252490888308862','85625712383524','Saving','150000','faroo','85912062','2','faroo@gmail.com');
+
+INSERT INTO account(acnumber, custssn, type, balance, username, password, bid, email) VALUES
+('5368736860935344','92888380703487','Checking','5053000','reff','77474366','2','reff@gmail.com');
+
+INSERT INTO account(acnumber, custssn, type, balance, username, password, bid, email) VALUES
+('3009652375563657','00406737365240','Saving','9000000','kh.moh','92747092','2','kh.moh@gmail.com');
+
+INSERT INTO account(acnumber, custssn, type, balance, username, password, bid, email) VALUES
+('7782043030938772','01531585348602','Checking','500000','m.sayed','01584862','2','m.sayed@gmail.com');
+
+INSERT INTO account(acnumber, custssn, type, balance, username, password, bid, email) VALUES
+('1681242233828462','12345678123456','Saving','9990000','eljoe','18361968','1','joe@gmail.com');
+
+
+
+INSERT INTO customer_phone_numbers VALUES ('17042655458275', 01426409319);
+INSERT INTO customer_phone_numbers VALUES ('17042655458275', 01516501972);
+INSERT INTO customer_phone_numbers VALUES ('64378304680857', 01750373709);
+INSERT INTO customer_phone_numbers VALUES ('64378304680857', 01608001850);
+INSERT INTO customer_phone_numbers VALUES ('92888380703487', 01506347556);
+INSERT INTO customer_phone_numbers VALUES ('92888380703487', 01154363495);
+INSERT INTO customer_phone_numbers VALUES ('92888380703487', 01395065853);
+INSERT INTO customer_phone_numbers VALUES ('01531585348602', 01445536899);
+
+
+INSERT INTO loan VALUES('17042655458275', 1, 10000, 'Personal Loan', '2023-01-01', '2026-01-01', '12%');
+INSERT INTO loan VALUES('64378304680857', 1, 20000, 'Student Loan','2023-06-01', '2024-06-01', '20%');
+INSERT INTO loan VALUES('92888380703487', 2, 30000, 'Small business Loan', '2023-01-01', '2023-07-01', '16%');
+INSERT INTO loan VALUES('01531585348602', 2, 40000, 'Student Loan', '2023-01-01', '2025-01-01', '15%');
+INSERT INTO loan VALUES('01531585348602', 1, 50000, 'Personal Loan', '2023-01-01', '2024-01-01', '10%');
+
+
